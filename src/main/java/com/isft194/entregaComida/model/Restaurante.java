@@ -1,11 +1,14 @@
 package com.isft194.entregaComida.model;
 
+
 import lombok.*;
-import javax.persistence.*;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "restaurante")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode
+@Builder @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode
 public class Restaurante {
 
     @Id
@@ -15,7 +18,6 @@ public class Restaurante {
     @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "direccion")
-    private String direccion;
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Menu> menus = new ArrayList<>();
 }

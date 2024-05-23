@@ -2,19 +2,23 @@ package com.isft194.entregaComida.model;
 
 import lombok.*;
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "menu")
+@Table(name = "item")
 @Builder @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode
-public class Menu {
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "nombre")
-    private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Producto> productos = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
+
+    @Column(name = "cantidad")
+    private Integer cantidad;
+
+    @Column(name = "precio")
+    private Float precio;
 }
