@@ -1,39 +1,47 @@
 package com.isft194.entregaComida.controller;
 
 
-import com.isft194.entregaComida.dto.ProductoDTO;
+import com.isft194.entregaComida.dto.request.ProductoRequest;
+import com.isft194.entregaComida.dto.response.ProductosResponse;
+import com.isft194.entregaComida.model.Producto;
 import com.isft194.entregaComida.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/productos")
+@RequestMapping(path = "/api/productos")
 public class ProductoController {
 
     @Autowired
     private ProductoService productoService;
 
-    @GetMapping("/listarProductos")
-    public List<ProductoDTO> getAllProductos() {
-        return productoService.findAll();
+    @PostMapping(value = "/crearProducto", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createProducto(@RequestBody ProductoRequest productoRequest) {
+        return productoService.newProducto(productoRequest);
+    }
+    @PutMapping(value = "/actualizarProducto/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateProducto(@PathVariable("id") Long id, @RequestBody ProductoRequest productoRequest) {
+        return productoService.updateProducto(productoRequest, id);
     }
 
-    @GetMapping("/mostrarProducto/{id}")
-    public ResponseEntity<ProductoDTO> getProductoById(@PathVariable Long id) {
-        return ResponseEntity.ok(productoService.findById(id));
+    @GetMapping(value = "/listarProductos", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ProductosResponse getAllProductos() {
+        return productoService.listarProductos();
     }
 
-    @PostMapping("/crearProducto")
-    public ResponseEntity<ProductoDTO> createProducto(@RequestBody ProductoDTO productoDTO) {
-        return ResponseEntity.ok(productoService.save(productoDTO));
+    @GetMapping(value = "/mostrarProducto/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Optional<Producto> findProductoById(@PathVariable Long id) {
+        return productoService.findProductoById(id);
     }
 
-    @DeleteMapping("/borrarProducto/{id}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable Long id) {
-        productoService.deleteById(id);
-        return ResponseEntity.noContent().build();
+
+    @DeleteMapping(value = "/borrarProducto/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteProducto(@PathVariable Long id) {
+       return productoService.deleteProducto(id);
     }
+
 }

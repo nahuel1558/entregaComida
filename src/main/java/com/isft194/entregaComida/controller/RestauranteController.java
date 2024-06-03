@@ -1,13 +1,13 @@
 package com.isft194.entregaComida.controller;
 
 
-import com.isft194.entregaComida.dto.RestauranteDTO;
+import com.isft194.entregaComida.dto.request.RestauranteRequest;
 import com.isft194.entregaComida.service.RestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/restaurantes")
@@ -16,24 +16,29 @@ public class RestauranteController {
     @Autowired
     private RestauranteService restauranteService;
 
-    @GetMapping("/listarRestaurantes")
-    public List<RestauranteDTO> getAllRestaurantes() {
-        return restauranteService.findAll();
+    @PostMapping(value = "/crearRestaurante", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createRestaurante(@RequestBody RestauranteRequest restauranteRequest) {
+        return restauranteService.createRestaurante(restauranteRequest);
+    }
+    @PutMapping(value = "/actualizarRestaurante/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updatePedido(@PathVariable("id") Long id, @RequestBody RestauranteRequest restauranteRequest) {
+        return restauranteService.updateRestaurante(restauranteRequest, id);
+    }
+    @GetMapping(value = "/listarRestaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllRestaurantes() {
+        return restauranteService.getAllRestaurantes();
     }
 
-    @GetMapping("/mostrarRestaurante/{id}")
-    public ResponseEntity<RestauranteDTO> getRestauranteById(@PathVariable Long id) {
-        return ResponseEntity.ok(restauranteService.findById(id));
+    @GetMapping(value = "/mostrarRestaurante/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getRestauranteById(@PathVariable Long id) {
+        return restauranteService.getRestauranteById(id);
     }
 
-    @PostMapping("/crearRestaurante")
-    public ResponseEntity<RestauranteDTO> createRestaurante(@RequestBody RestauranteDTO restauranteDTO) {
-        return ResponseEntity.ok(restauranteService.save(restauranteDTO));
+
+    @DeleteMapping(value = "/borrarRestaurante/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteRestaurante(@PathVariable Long id) {
+        return  restauranteService.deleteRestaurante(id);
     }
 
-    @DeleteMapping("/borrarRestaurante/{id}")
-    public ResponseEntity<Void> deleteRestaurante(@PathVariable Long id) {
-        restauranteService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+
 }

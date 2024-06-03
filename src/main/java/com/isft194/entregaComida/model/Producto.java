@@ -5,19 +5,20 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "producto")
-@Builder @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode
+@Builder @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Producto {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
-    @Column(name = "precio")
+    @Column(name = "precio", nullable = false)
     private Float precio;
 }

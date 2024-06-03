@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "menu")
-@Builder @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @EqualsAndHashCode
+@Builder @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class Menu {
 
     @Id
@@ -15,6 +15,16 @@ public class Menu {
     private Long id;
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @ManyToOne
+    @JoinColumn(name = "restaurante_id", nullable = false)
+    private Restaurante restaurante;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "menu_productos",
+            joinColumns = @JoinColumn(name = "menu_id"),
+            inverseJoinColumns = @JoinColumn(name = "producto_id")
+    )
     private List<Producto> productos = new ArrayList<>();
 }

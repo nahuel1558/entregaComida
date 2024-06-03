@@ -1,23 +1,50 @@
 package com.isft194.entregaComida.mapper;
 
 
-import com.isft194.entregaComida.dto.ProductoDTO;
+import com.isft194.entregaComida.dto.request.ProductoRequest;
+import com.isft194.entregaComida.dto.response.ProductoResponse;
+import com.isft194.entregaComida.dto.response.ProductosResponse;
 import com.isft194.entregaComida.model.Producto;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProductoMapper {
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    public ProductoDTO toDTO(Producto producto) {
-        return modelMapper.map(producto, ProductoDTO.class);
+    public Producto productoRequestToProducto(ProductoRequest productoRequest){
+        return Producto.builder()
+                .nombre(productoRequest.getNombre())
+                .descripcion(productoRequest.getDescripcion())
+                .precio(productoRequest.getPrecio())
+                .build();
     }
+public ProductoResponse productoToProductoResponse(Producto producto){
+        return ProductoResponse.builder()
+                .id(producto.getId())
+                .nombre(producto.getNombre())
+                .descripcion(producto.getDescripcion())
+                .precio(producto.getPrecio())
+                .build();
+}
 
-    public Producto toEntity(ProductoDTO productoDTO) {
-        return modelMapper.map(productoDTO, Producto.class);
+    public ProductosResponse productoListToResponse(List<Producto> productos) {
+        List<ProductoResponse> productoResponseList = new ArrayList<>();
+
+        for (Producto producto : productos) {
+            ProductoResponse productoResponse = ProductoResponse.builder()
+                    .id(producto.getId())
+                    .nombre(producto.getNombre())
+                    .descripcion(producto.getDescripcion())
+                    .precio(producto.getPrecio())
+                    .build();
+            productoResponseList.add(productoResponse);
+        }
+        ProductosResponse productosResponse = ProductosResponse.builder()
+                .productos(productoResponseList)
+                .build();
+
+        return productosResponse;
     }
 }
